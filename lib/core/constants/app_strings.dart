@@ -15,6 +15,12 @@ abstract final class AppStrings {
   static const String next = 'Berikutnya';
   static const String finish = 'Selesai';
 
+  static const String exitTitle = 'Keluar dari kuis?';
+  static const String exitMessage =
+      'Progresmu tetap tersimpan dan bisa dilanjutkan dari Home.';
+  static const String exit = 'Keluar';
+  static const String cancel = 'Batal';
+
   static const String resultTitle = 'Hasil';
   static const String retry = 'Ulangi Kuis';
   static const String backHome = 'Kembali ke Home';

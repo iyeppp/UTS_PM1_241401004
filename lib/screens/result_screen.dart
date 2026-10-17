@@ -74,33 +74,41 @@ class ResultScreen extends StatelessWidget {
       child: Image.asset(AppAssets.trophy, fit: BoxFit.contain),
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(AppStrings.resultTitle),
-        automaticallyImplyLeading: false,
-        actions: const [ThemeToggleButton()],
-      ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(vertical: r.md),
-            child: ResponsiveCenter(
-              child: r.useTwoColumns
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(child: trophy),
-                        SizedBox(width: r.xl),
-                        Expanded(child: summary),
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        trophy,
-                        SizedBox(height: r.lg),
-                        summary,
-                      ],
-                    ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        quiz.reset();
+        Navigator.popUntil(context, (route) => route.isFirst);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(AppStrings.resultTitle),
+          automaticallyImplyLeading: false,
+          actions: const [ThemeToggleButton()],
+        ),
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(vertical: r.md),
+              child: ResponsiveCenter(
+                child: r.useTwoColumns
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(child: trophy),
+                          SizedBox(width: r.xl),
+                          Expanded(child: summary),
+                        ],
+                      )
+                    : Column(
+                        children: [
+                          trophy,
+                          SizedBox(height: r.lg),
+                          summary,
+                        ],
+                      ),
+              ),
             ),
           ),
         ),

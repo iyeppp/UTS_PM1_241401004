@@ -30,11 +30,11 @@ class QuizProvider extends ChangeNotifier {
   int get answeredCount => _answers.where((a) => a != null).length;
   bool get allAnswered => answeredCount == totalQuestions;
 
-  // ---- Navigasi soal ----
+  // Navigasi soal
   bool get isFirst => _currentIndex == 0;
   bool get isLast => _currentIndex == totalQuestions - 1;
 
-  // ---- Hasil ----
+  // Hasil 
   bool get isFinished => _isFinished;
   int get correctCount {
     var count = 0;
@@ -49,7 +49,7 @@ class QuizProvider extends ChangeNotifier {
   int get score =>
       totalQuestions == 0 ? 0 : (correctCount * 100 ~/ totalQuestions);
 
-  /// Progres 0.0 - 1.0 berdasarkan posisi soal aktif.
+  /// Progres berdasarkan posisi soal aktif.
   double get progress =>
       totalQuestions == 0 ? 0 : (_currentIndex + 1) / totalQuestions;
 

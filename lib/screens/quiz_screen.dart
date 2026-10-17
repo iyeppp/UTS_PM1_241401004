@@ -26,6 +26,28 @@ class QuizScreen extends StatelessWidget {
     return OptionState.idle;
   }
 
+  /// Tombol back ditahan; pengguna ditanya dulu sebelum keluar.
+  Future<void> _confirmExit(BuildContext context) async {
+    final shouldExit = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(AppStrings.exitTitle),
+        content: const Text(AppStrings.exitMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text(AppStrings.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text(AppStrings.exit),
+          ),
+        ],
+      ),
+    );
+    if (shouldExit == true && context.mounted) Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final r = Responsive.of(context);
@@ -54,73 +76,81 @@ class QuizScreen extends StatelessWidget {
       ],
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(AppStrings.quizTitle),
-        actions: const [ThemeToggleButton()],
-      ),
-      body: SafeArea(
-        child: ResponsiveCenter(
-          child: Column(
-            children: [
-              ProgressHeader(
-                current: quiz.currentIndex + 1,
-                total: quiz.totalQuestions,
-              ),
-              SizedBox(height: r.md),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: r.useTwoColumns
-                      ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(child: questionCard),
-                            SizedBox(width: r.md),
-                            Expanded(child: options),
-                          ],
-                        )
-                      : Column(
-                          children: [
-                            questionCard,
-                            SizedBox(height: r.md),
-                            options,
-                          ],
-                        ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _confirmExit(context);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(AppStrings.quizTitle),
+          actions: const [ThemeToggleButton()],
+        ),
+        body: SafeArea(
+          child: ResponsiveCenter(
+            child: Column(
+              children: [
+                ProgressHeader(
+                  current: quiz.currentIndex + 1,
+                  total: quiz.totalQuestions,
                 ),
-              ),
-              SizedBox(height: r.sm),
-              Row(
-                children: [
-                  if (!quiz.isFirst) ...[
+                SizedBox(height: r.md),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: r.useTwoColumns
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(child: questionCard),
+                              SizedBox(width: r.md),
+                              Expanded(child: options),
+                            ],
+                          )
+                        : Column(
+                            children: [
+                              questionCard,
+                              SizedBox(height: r.md),
+                              options,
+                            ],
+                          ),
+                  ),
+                ),
+                SizedBox(height: r.sm),
+                Row(
+                  children: [
+                    if (!quiz.isFirst) ...[
+                      Expanded(
+                        child: PrimaryButton(
+                          label: AppStrings.previous,
+                          isOutlined: true,
+                          onPressed: quiz.previous,
+                        ),
+                      ),
+                      SizedBox(width: r.md),
+                    ],
                     Expanded(
                       child: PrimaryButton(
-                        label: AppStrings.previous,
-                        isOutlined: true,
-                        onPressed: quiz.previous,
+                        label: quiz.isLast
+                            ? AppStrings.finish
+                            : AppStrings.next,
+                        onPressed: !quiz.hasAnsweredCurrent
+                            ? null
+                            : quiz.isLast
+                            ? () {
+                                quiz.finish();
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  AppRoutes.result,
+                                );
+                              }
+                            : quiz.next,
                       ),
                     ),
-                    SizedBox(width: r.md),
                   ],
-                  Expanded(
-                    child: PrimaryButton(
-                      label: quiz.isLast ? AppStrings.finish : AppStrings.next,
-                      onPressed: !quiz.hasAnsweredCurrent
-                          ? null
-                          : quiz.isLast
-                          ? () {
-                              quiz.finish();
-                              Navigator.pushReplacementNamed(
-                                context,
-                                AppRoutes.result,
-                              );
-                            }
-                          : quiz.next,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: r.md),
-            ],
+                ),
+                SizedBox(height: r.md),
+              ],
+            ),
           ),
         ),
       ),
