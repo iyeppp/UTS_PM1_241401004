@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'core/constants/app_strings.dart';
+import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'providers/quiz_provider.dart';
 import 'providers/theme_provider.dart';
-import 'screens/home_screen.dart';
 
 /// Root aplikasi. Provider diletakkan di atas `MaterialApp` agar state
 /// bertahan saat rotasi dan perpindahan halaman.
@@ -27,14 +27,8 @@ class App extends StatelessWidget {
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: themeProvider.themeMode,
-            // Sementara, diganti router + QuizScreen pada Tahap 8 & 10.
-            home: Builder(
-              builder: (context) => HomeScreen(
-                onStart: () => ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Halaman kuis belum dibuat')),
-                ),
-              ),
-            ),
+            initialRoute: AppRoutes.home,
+            onGenerateRoute: AppRouter.generateRoute,
           );
         },
       ),

@@ -10,6 +10,18 @@ abstract final class AppStrings {
   static const String resume = 'Lanjutkan Kuis';
   static const String restart = 'Mulai Ulang';
 
+  static const String quizTitle = 'Kuis';
+  static const String previous = 'Sebelumnya';
+  static const String next = 'Berikutnya';
+  static const String finish = 'Selesai';
+
+  static const String resultTitle = 'Hasil';
+  static const String retry = 'Ulangi Kuis';
+  static const String backHome = 'Kembali ke Home';
+  static const String resultHigh = 'Luar biasa, Doctor! Pengetahuanmu hebat.';
+  static const String resultMid = 'Lumayan! Terus belajar tentang Terra.';
+  static const String resultLow = 'Jangan menyerah, coba lagi ya!';
+
   static const String questionsLabel = 'Soal';
   static const String progressLabel = 'Progres';
   static const String correctLabel = 'Benar';
